@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Circular waveform</title>
+         <!--Bootstarp link-->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    </head>
+    <body>
+        <!-- <script src="app.css"></script> -->
+        <nav class="navbar navbar-dark bg-dark ">
+            <span class="navbar-brand mb-9 h1 mx-auto">Circular Waveform</span>
+        </nav>
+        <input type="file" id="audioInput" class="form-control" accept="audio/*" src="http://ia902606.us.archive.org/35/items/shortpoetry_047_librivox/song_cjrg_teasdale_64kb.mp3"><br/>
+        <button id="button" class="btn btn-primary">Get Waveform</button><br/>
+        <div class="vz-wrapper">
+            <audio id="myAudio" controls data-author="Author" data-title="title"></audio>
+            <div class="vz-wrapper -canvas">
+                <canvas id="myCanvas" width="800" height="400"></canvas>
+            </div>
+            
+        </div>
+        <script src="visualizer.js"></script>
+        
+
+    </body>
+</html>
