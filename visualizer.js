@@ -56,8 +56,10 @@ AUDIO.VISUALIZER = (function () {
     Visualizer.prototype.setContext = function () {
         
         try {
-            window.AudioContext = window.AudioContext || window.webkitAudioContext;
+            
+            var AudioContext = window.AudioContext || window.webkitAudioContext;
             console.log(this.ctx,'before');
+            console.log(AudioContext);
             
             this.ctx = new window.AudioContext();
             console.log(this.ctx,'after')
@@ -76,6 +78,11 @@ AUDIO.VISUALIZER = (function () {
                   console.log('Playback resumed successfully');
                 });
               });
+              document.getElementById('capture').addEventListener('click',function(){
+                  context.suspend().then(()=>{
+                      console.log('playback paused')
+                  })
+              })
             return this;
         } catch (e) {
             console.info('Web Audio API is not supported.', e);
@@ -147,13 +154,14 @@ AUDIO.VISUALIZER = (function () {
             audio.crossOrigin = "anonymous";
             console.log(audio.crossOrigin);
             audio.load();
-            audio.play();
+            // audio.play();
             
           };
         
 
-        // this.audioSrc = this.audio.src
-        this.audioSrc = audio.src;
+        
+        // this.audioSrc = audio.src;
+        this.audioSrc ='http://ia902606.us.archive.org/35/items/shortpoetry_047_librivox/song_cjrg_teasdale_64kb.mp3';
         
         return this;
     };
@@ -210,10 +218,14 @@ AUDIO.VISUALIZER = (function () {
         var req = new XMLHttpRequest();
         req.open('GET', this.audioSrc, true);
         req.responseType = 'arraybuffer';
+        
         this.canvasCtx.fillText('Loading...', this.canvas.width / 2 + 10, this.canvas.height / 2);
+        console.log('here loading')
 
         req.onload = function () {
+            console.log('onload')
             context.decodeAudioData(req.response, this.playSound.bind(this), this.onError.bind(this));
+            console.log(req.response);
         }.bind(this);
 
         req.send();
@@ -227,13 +239,15 @@ AUDIO.VISUALIZER = (function () {
      */
     Visualizer.prototype.playSound = function (buffer) {
         this.isPlaying = true;
-console.log(this.ctx.state);
+        console.log('playsound success')
         if ( context.state === 'suspended') {
-            context.resume();
-            console.log(this.ctx)
-            return  context.resume();
+            
+             context.resume().then(() => {
+                console.log('Playback resumed successfully');
+                console.log(context);
+              });
         }
-
+        
         this.sourceNode.buffer = buffer;
         this.sourceNode.start(0);
         this.resetTimer();
@@ -255,7 +269,9 @@ console.log(this.ctx.state);
      * Start playing timer.
      */
     Visualizer.prototype.startTimer = function () {
+        console.log('start timer')
         var _this = this;
+
         INTERVAL = setInterval(function () {
             if (_this.isPlaying) {
                 var now = new Date(_this.duration);
@@ -268,11 +284,14 @@ console.log(this.ctx.state);
         }, 1000);
     };
 
+    
+
     /**
      * @description
      * Reset time counter.
      */
     Visualizer.prototype.resetTimer = function () {
+        console.log('reset timer')
         var time =  new Date(0, 0);
         this.duration = time.getTime();
     };
@@ -292,6 +311,7 @@ console.log(this.ctx.state);
      * Render frame on canvas.
      */
     Visualizer.prototype.renderFrame = function () {
+        console.log('renderframe')
         requestAnimationFrame(this.renderFrame.bind(this));
         this.analyser.getByteFrequencyData(this.frequencyData);
 
@@ -300,6 +320,7 @@ console.log(this.ctx.state);
         this.renderTime();
         this.renderText();
         this.renderByStyleType();
+        this.renderLounge();
     };
 
     /**
@@ -307,6 +328,7 @@ console.log(this.ctx.state);
      * Render audio author and title.
      */
     Visualizer.prototype.renderText = function () {
+        console.log('rendertext');
         var cx = this.canvas.width / 2;
         var cy = this.canvas.height / 2;
         var correction = 10;
@@ -343,6 +365,7 @@ console.log(this.ctx.state);
      * Render lounge style type.
      */
     Visualizer.prototype.renderLounge = function () {
+        console.log('enter render lounge')
         var cx = this.canvas.width / 2;
         var cy = this.canvas.height / 2;
         var radius = 140;
@@ -440,10 +463,10 @@ document.addEventListener('DOMContentLoaded', function () {
         audio: 'myAudio',
         canvas: 'myCanvas',
         style: 'lounge',
-        barWidth: 2,
-        barHeight: 2,
+        barWidth: 8,
+        barHeight: 20,
         barSpacing: 7,
-        barColor: '#cafdff',
+        barColor: 'red',
         shadowBlur: 20,
         shadowColor: '#ffffff',
         font: ['12px', 'Helvetica']
