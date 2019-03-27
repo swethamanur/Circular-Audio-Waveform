@@ -11,10 +11,12 @@
         <nav class="navbar navbar-dark bg-dark ">
             <span class="navbar-brand mb-9 h1 mx-auto">Circular Waveform</span>
         </nav>
-        <input type="file" id="audioInput" class="form-control" accept="audio/*" src="http://ia902606.us.archive.org/35/items/shortpoetry_047_librivox/song_cjrg_teasdale_64kb.mp3"><br/>
-        <button id="button" class="btn btn-primary">Get Waveform</button><br/>
+        <input type="file" id="audioInput" class="form-control" accept="audio/*" ><br/>
+        <button id="button" class="btn btn-primary">Get Waveform</button> 
+        <button id="capture"  class="btn btn-primary">Capture!</button><br/>
+
         <div class="vz-wrapper">
-            <audio id="myAudio" controls data-author="Author" data-title="title"></audio>
+            <audio id="myAudio"  data-author="Author" data-title="title"></audio>
             <div class="vz-wrapper -canvas">
                 <canvas id="myCanvas" width="800" height="400"></canvas>
             </div>
